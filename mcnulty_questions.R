@@ -470,42 +470,19 @@ sociological_data_eda_summary %>%
        subtitle = "by Gender, and Region"
        #caption = "your caption here"
   )
-
-
-   
-   work_distance
-   
-    
+sociological_data_eda_summary %>% 
+  ggplot(aes(x=mean_education_months,  y=mean_implied_avg_hourly_wage, group=region, color=region_simple, size=mean_implied_avg_hourly_wage))+
+  geom_point(shape=1)+
+  facet_grid(~gender)+
+  theme_bw()+
+  labs(title = "Comparison of Hourly Wage and hours worked ",
+       subtitle = "by Gender, and Region"
+       #caption = "your caption here"
   )
-  
-  
-  
-  
-  
 
 
 
 
-
-
-
-
-Data %>% 
-  mutate(Shift = ifelse(grepl("first|1st", Unit, ignore.case = TRUE),
-                        "First Shift",
-                        ifelse(grepl("third|3rd", Unit, ignore.case = TRUE),
-                               "Third Shift",
-                               "Neither")))
-
-
-
-
-
-
-
-
-
-)
 ggplot(sociological_data, aes(education_months, annual_income_ppp , size= job_type, color=region))+
   geom_point( shape=1, alpha=.7)+
   scale_size_discrete (range = c(7, 3))
