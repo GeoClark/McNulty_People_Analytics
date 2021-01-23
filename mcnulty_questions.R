@@ -2,7 +2,7 @@
 
 
 #Regression Modeling in People Analytics by Keith McNulty
-#Answers to data Excercises at the end of each chapter.
+#Answers to data Exercises at the end of each chapter.
 #CHAPTER 2
 library(dplyr)
 library(ggplot2)
@@ -422,14 +422,15 @@ sociological_data_eda<- sociological_data %>%
 
 
 
-
-
-
-# x-plot                                                
+# Box plot of avg_hourly wage by skill type, gender, and region_simple                                                
 sociological_data_eda %>% 
-  ggplot(aes(x= implied_avg_hourly_wage,  y=implied_avg_hourly_wage, shape=job_type, color=region_simple ))+
-  geom_point()+
-  facet_grid(~gender)
+  filter(., !is.na(gender)) %>% 
+  ggplot(aes(x=job_type,  y=implied_avg_hourly_wage, shape=region_simple, color=region_simple ))+
+  geom_boxplot()+
+  facet_grid(~gender)+
+  ggtitle("Comparison of Hourly Wage by Skill, Gender, and Region")+
+  theme_bw()
+  
 
 
 
