@@ -428,8 +428,59 @@ sociological_data_eda %>%
   ggplot(aes(x=job_type,  y=implied_avg_hourly_wage, shape=region_simple, color=region_simple ))+
   geom_boxplot()+
   facet_grid(~gender)+
-  ggtitle("Comparison of Hourly Wage by Skill, Gender, and Region")+
-  theme_bw()
+  theme_bw()+
+  labs(title = "Comparison of Hourly Wage ",
+       subtitle = "by Skill, Gender, and Region"
+       #caption = "your caption here"
+       )
+  
+#x-plot income vs hours worked
+sociological_data_eda %>% 
+  ggplot(aes(x=average_wk_hrs,  y=annual_income_ppp,  color=region))+
+  geom_point()+
+  facet_grid(~gender)+
+  theme_bw()+
+  labs(title = "Comparison of Hourly Wage and hours worked ",
+       subtitle = "by Gender, and Region"
+       #caption = "your caption here"
+  )
+
+  # The x-plot isn't very clear.  Let's summarize the data by gender, job_type, and region
+sociological_data_eda_summary<-
+  sociological_data_eda %>% 
+  group_by(region, region_simple, job_type, gender) %>% 
+  summarize(
+   mean_annual_income_ppp= mean(annual_income_ppp, na.rm=TRUE ),
+
+   mean_average_wk_hrs=mean(average_wk_hrs, na.rm=TRUE),
+   
+   mean_implied_avg_hourly_wage= mean(implied_avg_hourly_wage, na.rm=TRUE),
+   
+   mean_education_months=mean(education_months, na.rm=TRUE),
+   
+   mean_family_size= mean(family_size, na.rm=TRUE)
+  )
+
+sociological_data_eda_summary %>% 
+  ggplot(aes(x=mean_average_wk_hrs,  y=mean_annual_income_ppp,  color=region_simple, size=mean_implied_avg_hourly_wage))+
+  geom_point()+
+  facet_grid(job_type~gender)+
+  theme_bw()+
+  labs(title = "Comparison of Hourly Wage and hours worked ",
+       subtitle = "by Gender, and Region"
+       #caption = "your caption here"
+  )
+
+
+   
+   work_distance
+   
+    
+  )
+  
+  
+  
+  
   
 
 
