@@ -26,7 +26,7 @@ str(my_names)
 which<-c(1, 2, 3)
 #verify length of which matches the length of my_names.
 str(which)
-
+ 
 #2.7.2.3__
 ##Create a dataframe called names which consists of the two vectors my_names and which as columns. 
 ##Calculate the dimensions of names.
