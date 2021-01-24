@@ -397,6 +397,8 @@ scale_colour_manual(values = c("black", "red"))+
 # Data exploration for visualization
 #scale wage to an hourly wage. 52 weeks in a year.
 sociological_data_eda<- sociological_data %>% 
+  dplyr::mutate(region= gsub(" ", "_", region)) %>% 
+  dplyr::mutate(region= gsub("-", "_", region)) %>% 
   dplyr::mutate(implied_avg_hourly_wage=  annual_income_ppp/(average_wk_hrs*52)) %>% 
   dplyr::mutate(normalized_yearly_education_value= (52*40*implied_avg_hourly_wage)/ education_months) %>% 
   
@@ -481,8 +483,6 @@ sociological_data_eda_summary %>%
   )
 
 
-
-
 ggplot(sociological_data, aes(education_months, annual_income_ppp , size= job_type, color=region))+
   geom_point( shape=1, alpha=.7)+
   scale_size_discrete (range = c(7, 3))
@@ -520,8 +520,8 @@ library(ggplot2)
 library(GGally)
 
 # display a pair plot of all four columns of data
-sociological_data %>% 
-  dplyr::select(  "annual_income_ppp", "average_wk_hrs", "education_months", 
+sociological_data_eda %>% 
+  dplyr::select(  "annual_income_ppp", "average_wk_hrs","implied_avg_hourly_wage" , "education_months", 
                   "family_size",  "work_distance", 
                   "languages", "gender","job_type"  ) %>% 
   GGally::ggpairs(. )
@@ -609,7 +609,8 @@ library(stringr)
 #prepare data for modeling.  We use the drop first column argument in the function "dummy_cols" to avoid the "dummy variable trap".
 # Including a dummy variable for all unique values in a column introduces multi-collinearity.
 
-sociological_data_dummy<-  sociological_data %>% 
+sociological_data_dummy<-  sociological_data_eda %>% 
+  #dplyr::select(-region_simple) %>% 
   #remove spaces from values in "region" before creating dummy variables. SPaces cause issues in specifying the model in later steps.
   dplyr::mutate(region= str_replace(region, " ", "_")) %>% 
   #selecting all columns except work_distance and languages to reduce missingness and multicolinearity.
@@ -625,36 +626,44 @@ sociological_data_dummy<-  sociological_data %>%
 #kitchen sink model
 model_1<-
   lm(data = sociological_data_dummy, formula = annual_income_ppp ~    average_wk_hrs  +  
-       education_months  + job_type_Unskilled  +  gender_M+ region_Western_Europe)
-
-"region_Central_Asia", 
-"region_Eastern_Asia", "region_Eastern_Europe", "region_Latin_America and the Caribbean", 
-"region_Melanesia", "region_Micronesia", "region_Northern_Africa", 
-"region_Northern_America", "region_Northern_Europe", "region_Polynesia", 
-"region_South-eastern_Asia", "region_Southern_Asia", "region_Southern_Europe", 
-"region_Sub-Saharan_Africa", "region_Western_Asia", "region_Western_Europe"
+       education_months  + job_type_Unskilled  +  gender_M+ family_size + 
+       region_Central_Asia +  region_Eastern_Asia  + region_Polynesia  +  region_Eastern_Europe  +  
+       region_Melanesia  +  region_Micronesia  +  region_Northern_Europe  +  region_South_eastern_Asia  +
+       region_Northern_Africa  + region_Northern_America  +  region_Sub_Saharan_Africa  +
+       region_Southern_Asia  +  region_Southern_Europe +  region_Western_Asia  + region_Latin_America_and_the_Caribbean 
+       )
 
 
-+
-  +
-  
-  , , , 
-, , , , , 
-region_Eastern Asia, region_Eastern Europe, region_Latin America and the Caribbean, 
-region_Melanesia, region_Micronesia", region_Northern Africa, 
-region_Northern America, "region_Northern Europe", region_Polynesia, 
-region_South-eastern Asia", region_Southern Asia, region_Southern Europe, 
-region_Sub-Saharan Africa, region_Western Asia, region_Western Europe, 
+summary(model_1)
+# family size, southern_Europe are not significant.  Average wk_hours is not significant but very close. It appears the region variables account for much of the variance in average wk_hourse. 
+#r2 .7956
 
+model_2<-
+  lm(data = sociological_data_dummy, formula = annual_income_ppp ~        
+       education_months  + job_type_Unskilled  +  gender_M + 
+       region_Central_Asia +  region_Eastern_Asia  + region_Polynesia  +  region_Eastern_Europe  +  
+       region_Melanesia  +  region_Micronesia  +  region_Northern_Europe  +  region_South_eastern_Asia  +
+       region_Northern_Africa  + region_Northern_America  +  region_Sub_Saharan_Africa  +
+       region_Southern_Asia   +  region_Western_Asia  + region_Latin_America_and_the_Caribbean  +
+       gender_M*job_type_Unskilled
+  )
+
+model2_summary <- summary(model_2)
+model2_summary$coefficients
 
 #4.7.2.9
 #Determine the overall fit of the model.
 
+#The p-value for the F statistic is quite small so we conclude our  model fits better than a random model.
 
-model_v1<- "yo"
+
+
+
 
 #4.7.2.10
 #Do some simple analysis on the residuals of the model to determine if the model is safe to interpret.
+
+#Plot Actual vs predictions
 
 
 
