@@ -663,10 +663,31 @@ model2_summary$coefficients
 #4.7.2.10
 #Do some simple analysis on the residuals of the model to determine if the model is safe to interpret.
 
+#get model predictions
+hist(resid(model_2))
+
 #Plot Actual vs predictions
+sociological_data_dummy_resid<-  sociological_data_dummy  %>% 
+dplyr::mutate(predicted=predict(model_2)) %>% 
+  dplyr::mutate(residual=resid(model_2))  
+ 
+ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=gender))+
+  geom_point(size=3,shape=1, alpha=.4)+
+  theme_bw()
+ 
+
+plot(predict(model_2),sociological_data_dummy$annual_income_ppp , col = rep(1:2),
+     xlab="predicted",ylab="actual")
+abline(a=0,b=1)
 
 
+plot(predict(model_2), resid(model_2),      
+     xlab="predicted",ylab="residuals"
+     )
+abline(h=0)
 
+
+# REsiduals are "mound-shaped" and appear to be normally distributed. Normally ditributed error is one underlying assuption of linear regression
 
 #4.7.2.11
 #Experiment with improving the model fit through possible interaction terms or non-linear extensions.
