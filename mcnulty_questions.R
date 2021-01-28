@@ -671,7 +671,7 @@ sociological_data_dummy_resid<-  sociological_data_dummy  %>%
 dplyr::mutate(predicted=predict(model_2)) %>% 
   dplyr::mutate(residual=resid(model_2))  
  
-ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=gender))+
+ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=region))+
   geom_point(size=3,shape=1, alpha=.4)+
   theme_bw()
  
