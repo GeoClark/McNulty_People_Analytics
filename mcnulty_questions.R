@@ -712,7 +712,7 @@ plot(predict(model_2), resid(model_2),
      )
 abline(h=0)
 
-# REsiduals are "mound-shaped" and appear to be normally distributed. Normally ditributed error is one underlying assuption of linear regression
+# REsiduals are "mound-shaped" and appear to be normally distributed. Normally distributed error is one underlying assumption of linear regression
 
 #4.7.2.11
 #Experiment with improving the model fit through possible interaction terms or non-linear extensions.
@@ -723,15 +723,33 @@ abline(h=0)
 #4.7.2.12
 #Comment on your results. Did anything in the results surprise you? If so, what might be possible explanations for this.
 
-
+#avg_wk_hrs was not not significant.  It seems that gender and job type are covaries with avg wk hours and the differences in salary observed in short and long work weeks can be explained by other variables.
 
 
 #4.7.2.13
 #Explain why you would or would not be comfortable using a model like this in a predictive setting - for example to help employers determine the right pay for employees.
+# My comfort with this model is dependent on the use case.  Using a model such as this to determine an employees pay would be appropriate when determining pay based on location, education, and job type but would be inappropriate when considering gender.
+#THe data set has minimal rows with the "skilled"  "female" employees. IN some countries adjusting a the salary of a potential employee downward because of gender could be immoral or illegal. 
+#If you were working with a non-profit to assess the value of education in certain parts of the developing world, then it would be appropriate to include gender as a predictor.  
 
 
 
 
 
 
+#Chapter 5
 
+#View the data and obtain statistical summaries. Ensure data types are appropriate and there is no missing data. Determine the outcome and input variables.
+#Using a pairplot or by plotting or correlating selected fields, try to hypothesize which variables may be significant in explaining who recently donated.
+#Run a binomial logistic regression model using all input fields. Determine which input variables have a significant effect on the outcome and the direction of that effect.
+#Calculate the odds ratios for the significant variables and explain their impact on the outcome
+#Check for collinearity or multicollinearity in your model using methods from previous chapters.
+#Experiment with model parsimony by reducing input variables that do not have a significant impact on the outcome. Decide on the most parsimonious model.
+#Calculate a variety of Pseudo-
+#  R
+#2
+#variants for your model. How would you explain these to someone with no statistics expertise?
+#  Report the conclusions of your modeling exercise to the charity by writing a simple explanation that assumes no knowledge of statistics.
+#Extension: Using a variety of methods of your choice, test the hypothesis that your model fits the data. How conclusive are your tests?
+#
+#
