@@ -1,6 +1,3 @@
-
-
-
 #Regression Modeling in People Analytics by Keith McNulty
 #Answers to data Exercises at the end of each chapter.
 #CHAPTER 2
@@ -10,6 +7,9 @@ library(tidyr)
 library(GGally)
 library(fastDummies)
 library(ggridges)
+library(rmarkdown)
+
+
 #2.7.2 Data Exercises
 
 #2.7.2.1__ 
@@ -477,7 +477,7 @@ sociological_data_eda_summary %>%
   geom_point(shape=1)+
   facet_grid(~gender)+
   theme_bw()+
-  labs(title = "Comparison of Hourly Wage and hours worked ",
+  labs(title = "Comparison of Hourly Wage and mean education(months)",
        subtitle = "by Gender, and Region"
        #caption = "your caption here"
   )
@@ -485,11 +485,14 @@ sociological_data_eda_summary %>%
 
 ggplot(sociological_data, aes(education_months, annual_income_ppp , size= job_type, color=region))+
   geom_point( shape=1, alpha=.7)+
-  scale_size_discrete (range = c(7, 3))
+  scale_size_discrete (range = c(7, 3))+
+  labs(title= "Annual Income vs education months")
 
 #plot density plot of job_type by gender.
 ggplot(sociological_data, aes( annual_income_ppp , fill=gender))+
-  geom_density(alpha=.8)+facet_wrap(~job_type)
+  geom_density(alpha=.8)+
+  facet_grid(rows=vars(job_type))+
+  labs(title="Annual income (ppp)", subtitle="by gender and job type")
 
 
 #4.7.2.2
