@@ -616,7 +616,7 @@ sociological_data_dummy<-  sociological_data_eda %>%
   #selecting all columns except work_distance and languages to reduce missingness and multicolinearity.
   dplyr::select(-work_distance, -languages) %>% 
   drop_na(.) %>% 
-  fastDummies::dummy_cols(remove_first_dummy = TRUE)
+  fastDummies::dummy_cols(remove_first_dummy = FALSE)
 
 
 
@@ -626,7 +626,7 @@ sociological_data_dummy<-  sociological_data_eda %>%
 #kitchen sink model
 model_1<-
   lm(data = sociological_data_dummy, formula = annual_income_ppp ~    average_wk_hrs  +  
-       education_months  + job_type_Unskilled  +  gender_M+ family_size + 
+       education_months  + job_type_Unskilled  +  gender_F+ family_size + 
        region_Central_Asia +  region_Eastern_Asia  + region_Polynesia  +  region_Eastern_Europe  +  
        region_Melanesia  +  region_Micronesia  +  region_Northern_Europe  +  region_South_eastern_Asia  +
        region_Northern_Africa  + region_Northern_America  +  region_Sub_Saharan_Africa  +
@@ -638,18 +638,20 @@ summary(model_1)
 # family size, southern_Europe are not significant.  Average wk_hours is not significant but very close. It appears the region variables account for much of the variance in average wk_hourse. 
 #r2 .7956
 
-model_2<-
+
+
+model_3<-
   lm(data = sociological_data_dummy, formula = annual_income_ppp ~        
-       education_months  + job_type_Unskilled  +  gender_M + 
+       education_months  + job_type_Unskilled  +  gender_F + 
        region_Central_Asia +  region_Eastern_Asia  + region_Polynesia  +  region_Eastern_Europe  +  
        region_Melanesia  +  region_Micronesia  +  region_Northern_Europe  +  region_South_eastern_Asia  +
        region_Northern_Africa  + region_Northern_America  +  region_Sub_Saharan_Africa  +
        region_Southern_Asia   +  region_Western_Asia  + region_Latin_America_and_the_Caribbean  +
-       gender_M*job_type_Unskilled
-  )
+       gender_F * job_type_Unskilled)
+ summary(model_3)
+model3_summary$coefficients
 
-model2_summary <- summary(model_2)
-model2_summary$coefficients
+
 
 #4.7.2.9
 #Determine the overall fit of the model.
@@ -673,19 +675,42 @@ dplyr::mutate(predicted=predict(model_2)) %>%
  
 ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=region))+
   geom_point(size=3,shape=1, alpha=.4)+
+  labs(title="Predicted vs annual income (ppp)")+
   theme_bw()
- 
+  
 
 plot(predict(model_2),sociological_data_dummy$annual_income_ppp , col = rep(1:2),
      xlab="predicted",ylab="actual")
 abline(a=0,b=1)
+#
+#Plot Actual vs predictions
+sociological_data_dummy_resid<-  sociological_data_dummy  %>% 
+  dplyr::mutate(predicted=predict(model_3)) %>% 
+  dplyr::mutate(residual=resid(model_3))  
 
+resid_job_type<-ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=job_type))+
+  geom_point(size=3,shape=1, alpha=.4)+
+  labs(title="Predicted vs annual income (ppp)",  subtitle = "colored by skill type")+
+  theme_bw()
+
+resid_gender<-ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=gender_M))+
+  geom_point(size=3,shape=1, alpha=.4)+
+  labs(title="Predicted vs annual income (ppp)", subtitle = "colored by gender")+
+  theme_bw()
+
+resid_region<-ggplot(sociological_data_dummy_resid, aes(x=predicted, y= annual_income_ppp, color=region))+
+  geom_point(size=3,shape=1, alpha=.4)+
+  labs(title="Predicted vs annual income (ppp)", subtitle = "colored by region")+
+  theme_bw()
+
+plot(predict(model_3),sociological_data_dummy$annual_income_ppp , col = rep(1:2),
+     xlab="predicted",ylab="actual")
+abline(a=0,b=1)
 
 plot(predict(model_2), resid(model_2),      
      xlab="predicted",ylab="residuals"
      )
 abline(h=0)
-
 
 # REsiduals are "mound-shaped" and appear to be normally distributed. Normally ditributed error is one underlying assuption of linear regression
 
