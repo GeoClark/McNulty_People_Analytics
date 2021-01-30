@@ -1,3 +1,6 @@
+#Questions are from Keith McNulty's handbook on regression
+workbook_link<- "http://peopleanalytics-regression-book.org/bin-log-reg.html"
+
 #Regression Modeling in People Analytics by Keith McNulty
 #Answers to data Exercises at the end of each chapter.
 #CHAPTER 2
@@ -745,17 +748,21 @@ abline(h=0)
 #5.5.2
 #Binomial Logistic Regression
 library(desc)
-
+library(peopleanalyticsdata)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(GGally)
+library(fastDummies)
+library(ggridges)
+library(rmarkdown)
 
 #load charity donation data from Peoples analytics package.
 charity_data<-
   peopleanalyticsdata::charity_donation
 
-
 #Question 5.5.2.1)
 #View the data and obtain statistical summaries. Ensure data types are appropriate and there is no missing data. Determine the outcome and input variables.
-
-
 glimpse(charity_data)
 summary(charity_data)
 sum(is.na(charity_data))
@@ -835,8 +842,17 @@ summary(simple_model)
   rm(charity_charity_data_dummy)
   
 
-library(DescTools)
-
+  (coefs <- summary(simple_model)$coefficients)
+  summary(simple_model)
+  
+  (full_coefs <- cbind(coefs[ ,c("Estimate", "Pr(>|z|)")], 
+                       odds_ratio = exp(simple_model$coefficients)
+  ))  
+  #Convert summary to a data frame and calculate odds. Extra () prints df directly.
+ ( full_coeffs_df<- data.frame(full_coefs) %>% 
+    dplyr::mutate(probability= odds_ratio/(odds_ratio+1))
+ )
+  
 
 #Question 5.5.2.7)
 #Calculate a variety of Pseudo- R2 variants for your model. How would you explain these to someone with no statistics expertise?
@@ -859,11 +875,25 @@ library(DescTools)
 #Question 5.5.2.8)
 #Report the conclusions of your modeling exercise to the charity by writing a simple explanation that assumes no knowledge of statistics.
 
-
+#We created a model to predict the likelihood that a donor would donate would donate in a given month using a set of 5 variables including: age, where the donor lived (urban, rural, or abroad), gender, months since the last donation, and the total contribution they have made to date.
+  #All else being equal, a donor is more likely to donate if they are female, elderly, live domestically in a rural environment, have donated recently, and have contributed larger sums in the past.
 
 
 
 #Question 5.5.2.9)
 #Extension: Using a variety of methods of your choice, test the hypothesis that your model fits the data. How conclusive are your tests?
 #
-#
+# assess goodness of fit of the model
+  library(LogisticDx)
+  
+
+  # get range of goodness of fit diagnostics
+  simple_model_diagnostics <- gof(simple_model, 
+                                               plotROC = TRUE)
+  
+    # returns a list
+  names(simpler_model_diagnostics)
+  
+  
+  
+  
