@@ -6,16 +6,15 @@ workbook_link<- "http://peopleanalytics-regression-book.org/bin-log-reg.html"
 ### Chapter 3 Questions
 library(peopleanalyticsdata)
 library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(rmarkdown)
 
 
 #working with charity donations data set.
 
-#load date
-
+#load data using csv via http
 total_donations<- read.csv("http://peopleanalytics-regression-book.org/data/charity_donation.csv")
+
+#Load using Peopleanalytics package
+total_donations<-peopleanalyticsdata::charity_donation
 
 #Quick EDA
 
