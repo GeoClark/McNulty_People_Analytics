@@ -1,14 +1,7 @@
 #Regression Modeling in People Analytics by Keith McNulty
 #Answers to data Exercises at the end of each chapter.
 #CHAPTER 2
-library(peopleanalyticsdata)
 library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(GGally)
-library(fastDummies)
-library(ggridges)
-library(rmarkdown)
 
 
 #2.7.2 Data Exercises
@@ -58,7 +51,6 @@ subset(ugtests, Yr1>50)
 
 #2.7.2.8__
 ##Install and load the package dplyr. Look up the help for the filter() function in this package and try to use it to repeat the task in the previous question.
-library(dplyr)
 ?dplyr::filter
 
 ugtests %>% 
@@ -84,7 +76,7 @@ mean_grtr_100_pipe<-
 mean_grtr_100_pipe
 
 
-#Alternative pipe without "pull" using sumarize function
+#Alternative pipe without "pull" using summarize function
 mean_grtr_100_pipe<-
   ugtests %>% 
   dplyr:: filter(Yr3>100) %>% 
