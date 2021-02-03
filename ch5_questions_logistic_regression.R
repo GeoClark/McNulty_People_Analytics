@@ -57,7 +57,7 @@ glimpse(charity_data_dummy)
 
 #build binomial logistic regression model
   full_model <- glm(formula = "recent_donation ~ .",
-                    family = "binomial",
+                    family = binomial,
                     data = charity_data_dummy)
   
   
@@ -90,7 +90,7 @@ library(car)
            "last_donation", "total_donations")
   
   simple_model <- glm(formula = "recent_donation ~ .",
-                    family = "binomial",
+                    family = binomial,
                     data = charity_data_dummy2)
 summary(simple_model)
   rm(charity_charity_data_dummy)
@@ -139,12 +139,11 @@ summary(simple_model)
 #
 # assess goodness of fit of the model
   library(LogisticDx)
-  
+  install.packages("LogisticDx")
 
   # get range of goodness of fit diagnostics
-  simple_model_diagnostics <- gof(simple_model, 
-                                               plotROC = TRUE)
-  
+  simple_model_diagnostics <- LogisticDx::gof(simple_model,  plotROC = FALSE)
+  LogisticDx::dx(simple_model)
     # returns a list
   names(simpler_model_diagnostics)
   
