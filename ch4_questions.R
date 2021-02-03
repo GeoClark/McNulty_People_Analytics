@@ -7,13 +7,14 @@ library(tidyr)
 library(GGally)
 library(fastDummies)
 library(ggridges)
-library(rmarkdown)
-
+library(naniar)
 #use the sociological data
 
 #load data as csv.
 sociological_data<-read.csv( "http://peopleanalytics-regression-book.org/data/sociological_data.csv")
-sociological_data1<-sociological_data
+
+#load from people analytics data set
+sociological_data<- peopleanalyticsdata::sociological_data
 
 
 #4.7.2.1
@@ -22,10 +23,10 @@ sociological_data1<-sociological_data
 
 # explore missingness using base package
 ##
-dim(sociological_data1)
-summary(sociological_data1)
+dim(sociological_data)
+summary(sociological_data)
 
-socio_na_sum<- sapply(sociological_data1, function(x) sum(is.na(x)))
+socio_na_sum<- sapply(sociological_data, function(x) sum(is.na(x)))
 #select columns with missing vaues
 socio_na_sum<-socio_na_sum[socio_na_sum>0]
 
