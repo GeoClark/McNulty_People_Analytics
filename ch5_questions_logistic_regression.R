@@ -1,7 +1,3 @@
-
-
-
-
 #Chapter 5 Data Exercises
 #5.5.2
 #Binomial Logistic Regression
@@ -13,7 +9,7 @@ library(tidyr)
 library(GGally)
 library(fastDummies)
 library(ggridges)
-library(rmarkdown)
+library(LogisticDx)
 
 #load charity donation data from Peoples analytics package.
 charity_data<-
