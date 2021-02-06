@@ -135,7 +135,6 @@ summary(simple_model)
 
 
 #Question 5.5.2.9)
-#Extension: Using a variety of methods of your choice, test the hypothesis that your model fits the data. How conclusive are your tests?
 #
 # assess goodness of fit of the model
   library(LogisticDx)
