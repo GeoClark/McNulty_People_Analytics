@@ -37,38 +37,89 @@ health_insurance <- cbind(health_insurance, dummy_product)
 # all input variables (let glm() handle dummy input variables)
 A_model <- glm(
   formula = productA ~ age + gender + children + 
-    position_level + tenure, 
+    position_level, 
   data = health_insurance, 
   family = "binomial"
 )
 
-
+#Fit model B. originally included "tenure." dropped due to being statistically insignificant.  
 B_model <- glm(
   formula = productB ~ age + gender + children + 
-    position_level + tenure, 
+    position_level, 
   data = health_insurance, 
   family = "binomial"
 )
-
+#Fit model C. Dropped "tenure" and "position_level"
 C_model <- glm(
-  formula = productC ~ age + gender + children + 
-    position_level + tenure, 
+  formula = productC ~ age + gender + children, 
   data = health_insurance, 
   family = "binomial"
 )
 
-
+Acoef<-A_model$coefficients
 
 
 # summary
 summary(A_model)
 summary(B_model)
 summary(C_model)
+#calculate odds for each model.  Combine and calculate p values
+modA_diagnostics<- as.data.frame(exp(A_model$coefficients)) %>% 
+  cbind(A_model$coefficients ) %>% 
+  dplyr::rename( odds="exp(A_model$coefficients)") %>% 
+  dplyr::rename(coefficients="A_model$coefficients") %>% 
+  dplyr::mutate(model="A_model")
 
+
+modB_diagnostics<- as.data.frame(exp(B_model$coefficients)) %>% 
+  cbind(B_model$coefficients ) %>% 
+  dplyr::rename( odds="exp(B_model$coefficients)") %>% 
+  dplyr::rename(coefficients="B_model$coefficients") %>% 
+  dplyr::mutate(model="B_model")
+
+
+
+modC_diagnostics<- 
+  as.data.frame(exp(C_model$coefficients)) %>% 
+  cbind(C_model$coefficients ) %>% 
+  dplyr::rename( odds="exp(C_model$coefficients)") %>% 
+  dplyr::rename(coefficients="C_model$coefficients") %>% 
+  dplyr::mutate(model="C_model")
+
+#print diagnostics
+modA_diagnostics
+
+modB_diagnostics
+
+modC_diagnostics
 
 #6.5.2.3
 #Carefully write down your interpretation of the odds ratios from the previous question.
+#For Model A:
 
+    #All else being equal:
+modA_diagnostics
+    #each year of age reduces the selection of choice A by 22%
+    #being male increases selection of A 132%
+    #each additional child increases the odds of selection 27%
+    #each position level increases odds 36%
+
+#
+#for B:
+#All else being equal:
+modB_diagnostics
+    #each year of age increases the selection of choice B by 6%
+    #being male reduces selection of B 90%
+    #each additional child decreases the odds of selection 63%
+    #each position level reduces odds of selection 24%
+
+
+#for C:
+#All else being equal:
+modC_diagnostics
+#each year of age increases the selection of choice C 11%%
+#being male increases selection of 207%
+#each additional child increases the odds of selection 80%%
 
 
 #6.5.2.4
