@@ -10,7 +10,7 @@ library(GGally)
 library(dummies)
 library(ggridges)
 library(LogisticDx)
-
+library(nnet)
 #6.5.2 Data exercises
 #Use the same health_insurance data set from this chapter to answer these questions.
 #
@@ -125,17 +125,36 @@ modC_diagnostics
 #6.5.2.4
 #Run a multinomial logistic regression model on the product outcome using Product B as reference. Calculate the coefficients, ratios and p-values in each case.
 
+## define reference by ensuring it is the first level of the factor
+health_insurance$product <- relevel(health_insurance$product, ref = "B")
 
+# check that B is now our reference
+levels(health_insurance$product)
+
+multi_model <- multinom(
+  formula = product ~ age + gender + children + 
+    position_level+tenure, 
+  data = health_insurance
+)
 
 #6.5.2.5
 #Verify that the coefficients for Product C against reference Product B matches those calculated in 6.3.3.
+summary(multi_model)$coefficients
 
+data.frame(summary(multi_model)$coefficients[2, ])
+#yes, coefficients match those calculated in 6.3.3
 
+# display odds ratios in transposed data frame
+odds_ratios <- exp(summary(multi_model)$coefficients)
+(data.frame(t(odds_ratios)))
+multi_model$coefficients
 
 #6.5.2.6
 #Carefully write down your interpretation of the odds ratios calculated in the previous question.
 
-
+#All else being equal, every additional year of age reduces the relative odds of selecting
+#Product A versus Product B by approximately 22%, and increases the relative odds of selecting Product C versus Product B by approximately 2%.
+#
 
 #6.5.2.7
 #Use the process described in 6.4.1 to simplify the multinomial model in Question 4.
