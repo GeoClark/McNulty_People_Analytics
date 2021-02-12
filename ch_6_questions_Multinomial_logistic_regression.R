@@ -169,3 +169,17 @@ multi_model$coefficients
 #Use the process described in 6.4.1 to simplify the multinomial model in Question 4.
 
 
+simpler_multi_model <- multinom(
+  formula = product ~ age + gender + children + position_level,
+  data = health_insurance, 
+  model = TRUE
+)
+
+summary(multi_model)$coefficients
+data.frame(summary(simpler_multi_model)$coefficients[1:2,])
+
+# None of the coefficients materially changed for the simplified model without tenure relative to the signal model.  Gender Non-binary cahnged but as mentioned in the chapter there are very few samples in this category.
+
+
+
+
