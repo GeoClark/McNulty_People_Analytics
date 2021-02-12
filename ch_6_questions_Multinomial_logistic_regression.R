@@ -152,9 +152,18 @@ multi_model$coefficients
 #6.5.2.6
 #Carefully write down your interpretation of the odds ratios calculated in the previous question.
 
+
 #All else being equal, every additional year of age reduces the relative odds of selecting
 #Product A versus Product B by approximately 22%, and increases the relative odds of selecting Product C versus Product B by approximately 2%.
 #
+#All else being equal, being male increases the relative odds of selecting A versus product B by 1000% and C relative to Product B 1100%.
+#
+#All else being equal, the number of children increases the relative odds of selecting A versus product B by 260% and C relative to Product B 320%.
+#
+#All else being equal, the position level increases the relative odds of selecting A versus product B by 51% and C relative to Product B 22%%.
+#
+#All else being equal, each year of tenure at the company decreases the relative odds of selecting A versus product B by 2% and C relative to Product B 1%.
+
 
 #6.5.2.7
 #Use the process described in 6.4.1 to simplify the multinomial model in Question 4.
