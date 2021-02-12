@@ -10,7 +10,6 @@ library(GGally)
 library(fastDummies)
 library(ggridges)
 library(LogisticDx)
-
 #load charity donation data from Peoples analytics package.
 charity_data<-
   peopleanalyticsdata::charity_donation
