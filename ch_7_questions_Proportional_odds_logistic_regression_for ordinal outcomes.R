@@ -58,32 +58,61 @@ GGally::ggpairs(managers)
 #Run a proportional odds logistic regression model against all relevant input variables.
 
 model <- polr(
-  formula = performance_group ~ yrs_employed + manager_hire + position + 
-    country + level + result, 
-  data = soccer
+  formula = performance_group ~ yrs_employed + manager_hire + test_score + 
+    group_size  +  concern_flag  + mobile_flag+customers  + high_hours_flag  +  transfers  +  reduced_schedule+ city , 
+  data = managers
 )
 
 
 #Exercise_7.4.2.5
 #Construct p-values for the coefficients and consider how to simplify the model to remove variables that do not impact the outcome.
 
+# get coefficients for manager performance model
+coefficients <- summary(model)$coefficients
+
+# calculate p-values
+p_value <- (1 - pnorm(abs(coefficients[ ,"t value"]), 0, 1))*2
+
+# bind back to coefficients matrix
+coefficients <- cbind(coefficients, p_value)
+
+model1_coefficients<-dplyr::arrange(coefficents, p_value)
+model1_coefficients
 
 
+#The variables "city", "reduced_schedule", "concern_flag", "customers",and "mobile" flag are not statistically significant and can be removed
+simpler_model<- polr(
+  formula = performance_group ~ yrs_employed + manager_hire + test_score + 
+    group_size  +    + high_hours_flag  +  transfers   , 
+  data = managers
+)
+
+coefficients <- summary(simpler_model)$coefficients
+
+# calculate p-values
+p_value <- (1 - pnorm(abs(coefficients[ ,"t value"]), 0, 1))*2
+odds<-exp((simpler_model)$coefficients)
+# bind back to coefficients matrix
+coefficients_simpler_model <- cbind(coefficients, p_value, odds)
+coefficients_simpler_model
 
 
 #Exercise_7.4.2.6
 #Calculate the odds ratios for your simplified model and write an interpretation of them.
 #
+coefficients_simpler_model
 
-
-
+# All else being equal  each year employed and being hired directly as a manager reduces a manager's chances of a better performance rating
+#Each additional individual in a group increases the odds of a manger being a higher performer by ~11%.
+#
+#Workers who work higher hours have a ~73% higher odds of being in a higher performing group.
+#Each additional transfer reduces performance 22%
 
 #Exercise_7.4.2.7
 #Estimate the fit of the simplified model using a variety of metrics and perform tests to determine if the model is a good fit for the data.
 
 
-
-
+  
 
 #Exercise_7.4.2.8
 #Construct new outcome variables and use a stratified binomial approach to determine if the proportional odds assumption holds for your simplified model. Are there any input variables for which you may be concerned that the assumption is violated? What would you consider doing in this case?
