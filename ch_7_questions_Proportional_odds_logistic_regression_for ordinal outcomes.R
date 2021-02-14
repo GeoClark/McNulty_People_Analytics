@@ -8,6 +8,8 @@ library(peopleanalyticsdata)
 library(MASS)  #masks dplyr's select function!
 library(brant)
 library(GGally)
+library(DescTools) 
+library(generalhoslem)
 
 #Load managers dataset from "people analytics" package.
 managers<-peopleanalyticsdata::managers
@@ -110,16 +112,22 @@ coefficients_simpler_model
 
 #Exercise_7.4.2.7
 #Estimate the fit of the simplified model using a variety of metrics and perform tests to determine if the model is a good fit for the data.
+DescTools::PseudoR2(
+  simpler_model, 
+  which = c("McFadden", "CoxSnell", "Nagelkerke", "AIC")
+)
+generalhoslem::lipsitz.test(simpler_model)
 
-
-  
-
+# The Mcfadden test is nearly significant but all other tests are not significant indicating our model fits the data well..
+# 
 #Exercise_7.4.2.8
 #Construct new outcome variables and use a stratified binomial approach to determine if the proportional odds assumption holds for your simplified model. Are there any input variables for which you may be concerned that the assumption is violated? What would you consider doing in this case?
 
+# create binary variable for "Mid" and "High"  versus "Bottom"
+managers$middle_plus <- ifelse(managers$performance_group == "Bottom", 0, 1)
 
-
-
+# create binary variable for "Top" versus "Middle" or "Bottom"
+managers$top <- ifelse(managers$performance_group == "Top", 1, 0)
 
 #Exercise_7.4.2.9
 #Use the Brant-Wald test to support or reject the hypothesis that the proportional odds assumption holds for your simplified model.
