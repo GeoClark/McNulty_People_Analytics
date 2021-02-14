@@ -129,13 +129,43 @@ managers$middle_plus <- ifelse(managers$performance_group == "Bottom", 0, 1)
 # create binary variable for "Top" versus "Middle" or "Bottom"
 managers$top <- ifelse(managers$performance_group == "Top", 1, 0)
 
+# model for at least a "middle" performing manager
+middle_plus_model <- glm(
+  middle_plus ~ yrs_employed + manager_hire + test_score + 
+    group_size  +    + high_hours_flag  +  transfers , 
+  data = managers, 
+  family = "binomial"
+)
+
+# model for a red card
+top_model <- glm(
+  top ~ yrs_employed + manager_hire + test_score + 
+    group_size  +    + high_hours_flag  +  transfers ,
+  data = managers, 
+  family = "binomial"
+)
+
+#compare coefficients of stratified binomial model
+(coefficient_comparison <- data.frame(
+  middle_plus_coeff = summary(middle_plus_model)$coefficients[ , "Estimate"],
+  top_coeff = summary(top_model)$coefficients[ ,"Estimate"],
+  diff = summary(top_model)$coefficients[ ,"Estimate"] - 
+    summary(middle_plus_model)$coefficients[ , "Estimate"]
+))
+
+# The coefficients for most variables in the stratified model are stable with the exception of manager_hireY and high_hours_flag.  To check this we can hold those variables out and re-test the assumptions of the model.
 #Exercise_7.4.2.9
 #Use the Brant-Wald test to support or reject the hypothesis that the proportional odds assumption holds for your simplified model.
 
 
-
-
+brant::brant(simpler_model)
+# we can keep the null hypothesis that the proportional odds assumption holds.
 
 #Exercise_7.4.2.10
 #Write a full report on your model intended for an audience of people with limited knowledge of statistics.#
 #
+#No interest. 
+
+
+
+
