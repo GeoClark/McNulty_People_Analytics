@@ -3,6 +3,9 @@
 
 library(dplyr)
 library(peopleanalyticsdata)
+library(lme4)
+library(ggplot2)
+
 
 #8.3.2.1
 #Split the data into two sets according to the gender of the participant. Run standard binomial logistic regression models on each set to determine the relationship between the dec decision outcome and the input variables samerace, agediff, attr, intel and prob.
@@ -27,13 +30,26 @@ speed_dating_fem<-filter(speed_dating, gender==0)
 #get model summaries
     summary(model_male)
     summary(model_female)
-#
 
-#
-#
+    
 #8.3.2.2
 #Run similar mixed models on these sets with a random intercept for iid.
-#
+
+  #fit mixed model with random intercept for MALES  
+    iid_intercept_model_male <- lme4:::glmer(
+      dec ~ agediff + samerace + attr + intel + prob + (1 | iid),
+      data = speed_dating_male,
+      family = "binomial"
+    )    
+    #fit mixed model with random intercept for FEMALES  
+    iid_intercept_model_female <- lme4:::glmer(
+      dec ~ agediff + samerace + attr + intel + prob + (1 | iid),
+      data = speed_dating_fem,
+      family = "binomial"
+    )    
+    
+    
+    #
 #
 #
 #8.3.2.3
